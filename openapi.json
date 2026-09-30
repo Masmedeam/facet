@@ -1,0 +1,124 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Facet",
+    "version": "0.1.0",
+    "description": "Paid claim-specific evidence retrieval and assessment. Production accepts Solana MPP through pay.sh-compatible clients. Each request settles $0.05 USDC before research, including cache hits and inconclusive results. See /agents.md for payment and retry instructions. Demo responses are fictional and explicitly labeled."
+  },
+  "servers": [{ "url": "https://facet.hidden-pond-5e6a.workers.dev", "description": "Production, Solana mainnet" }, { "url": "http://127.0.0.1:1402", "description": "Local pay.sh sandbox gateway" }],
+  "externalDocs": { "description": "Agent usage guide", "url": "https://facet.hidden-pond-5e6a.workers.dev/agents.md" },
+  "paths": {
+    "/benchmark.json": {
+      "get": {
+        "operationId": "communityBenchmark",
+        "summary": "Free community capability evaluation with all attempted outcomes",
+        "responses": { "200": { "description": "Inputs, source questions, bot replies, provisional reference labels, assessments, failures, citations and payment accounting", "content": { "application/json": { "schema": { "type": "object" } } } } }
+      }
+    },
+    "/showcase.json": {
+      "get": {
+        "operationId": "communityExamples",
+        "summary": "Free curated community claims and captured findings",
+        "responses": { "200": { "description": "Illustrative examples with source links, request bodies, citations, settlement signatures, methodology and limitations; not an accuracy benchmark", "content": { "application/json": { "schema": { "type": "object" } } } } }
+      }
+    },
+    "/llms.txt": {
+      "get": {
+        "operationId": "agentDiscovery",
+        "summary": "Free agent documentation index",
+        "responses": { "200": { "description": "Plain-text documentation index", "content": { "text/plain": { "schema": { "type": "string" } } } } }
+      }
+    },
+    "/agents.md": {
+      "get": {
+        "operationId": "agentInstructions",
+        "summary": "Free agent integration and payment guide",
+        "responses": { "200": { "description": "Markdown usage instructions", "content": { "text/markdown": { "schema": { "type": "string" } } } } }
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "operationId": "specification",
+        "summary": "API specification",
+        "responses": { "200": { "description": "OpenAPI document" } }
+      }
+    },
+    "/v1/health": {
+      "get": {
+        "operationId": "health",
+        "summary": "Check service readiness",
+        "responses": { "200": { "description": "Ready" }, "503": { "description": "Missing provider configuration" } }
+      }
+    },
+    "/v1/verify": {
+      "post": {
+        "operationId": "verifyClaim",
+        "summary": "Retrieve and assess evidence for one claim ($0.05 USDC)",
+        "description": "Pay using pay curl or a Solana MPP-compatible client on production. Settlement precedes research; no automatic refunds or paid-response recovery. A fresh retry may charge again. Source text and social discussions; no historical verification or media forensics. Maximum twelve provider calls. Freshness-limited cache hits incur the same $0.05 fixed price but no additional provider calls. Local origins require the authenticated gateway.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/VerifyRequest" } } }
+        },
+        "responses": {
+          "200": { "description": "Evidence-backed assessment or explicit uncertainty", "headers": { "Payment-Receipt": { "description": "Production settlement receipt", "schema": { "type": "string" } }, "X-Payment-Settlement-Signature": { "description": "Production Solana transaction signature", "schema": { "type": "string" } } }, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Verification" } } } },
+          "400": { "description": "Invalid request" },
+          "402": { "description": "Payment required; gateway supplies payment challenge" },
+          "413": { "description": "JSON body exceeds 16 KB" },
+          "422": { "description": "Historical as-of verification unsupported" },
+          "500": { "description": "Request failed; payment may already have settled" },
+          "502": { "description": "Assessment provider failed" },
+          "503": { "description": "Not ready or capacity exhausted" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VerifyRequest": {
+        "type": "object", "additionalProperties": false, "required": ["claim"],
+        "properties": {
+          "claim": { "type": "string", "minLength": 5, "maxLength": 2000 },
+          "context": { "type": "string", "maxLength": 4000 },
+          "source_url": { "type": "string", "format": "uri", "maxLength": 2048, "description": "X/Reddit thread or public document URL (enable web sources for documents)" },
+          "as_of": { "type": "string", "format": "date-time", "description": "Historical values currently rejected" },
+          "sources": { "title": "Evidence channels", "description": "Where the endpoint may retrieve evidence: web (search and source documents), x (posts and replies), reddit (threads and comments). Omit to allow all three. These are retrieval channels, not provider names, supplied URLs, or returned citations. The endpoint selects provider operations.", "type": "array", "minItems": 1, "maxItems": 3, "items": { "enum": ["web", "x", "reddit"] }, "default": ["web", "x", "reddit"] }
+        }
+      },
+      "Verification": {
+        "type": "object", "required": ["id", "claim", "checked_at", "mode", "verdict", "summary", "atomic_claims", "citations", "evidence", "limitations", "next_steps", "research", "billing"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "claim": { "type": "string" },
+          "checked_at": { "type": "string", "format": "date-time" },
+          "mode": { "enum": ["demo", "live"] },
+          "verdict": { "$ref": "#/components/schemas/Verdict" },
+          "summary": { "type": "string" },
+          "atomic_claims": { "type": "array", "items": { "type": "object", "properties": {
+            "claim": { "type": "string" }, "verdict": { "$ref": "#/components/schemas/Verdict" },
+            "explanation": { "type": "string" }, "evidence_ids": { "type": "array", "items": { "type": "string" } }
+          } } },
+          "citations": { "type": "array", "items": { "type": "object", "properties": {
+            "evidence_id": { "type": "string" }, "quote": { "type": "string" }, "relation": { "enum": ["supports", "contradicts", "context"] }
+          } } },
+          "evidence": { "type": "array", "items": { "type": "object", "properties": {
+            "id": { "type": "string" }, "source": { "enum": ["web", "x", "reddit"] }, "url": { "type": "string", "format": "uri" },
+            "text": { "type": "string" }, "author": { "type": "string" }, "published_at": { "type": "string" },
+            "retrieved_at": { "type": "string", "format": "date-time" }, "scope": { "enum": ["search_snippet", "source_document", "post", "thread_comment"] },
+            "title": { "type": "string" }, "retrieval_provider": { "type": "string" }, "content_truncated": { "type": "boolean" }, "content_sha256": { "type": "string" }
+          } } },
+          "limitations": { "type": "array", "items": { "type": "string" } },
+          "next_steps": { "type": "array", "items": { "type": "string" } },
+          "research": { "type": "object" },
+          "billing": { "type": "object" }
+          ,"cache": { "type": "object", "properties": {
+            "status": { "enum": ["hit", "miss", "coalesced", "disabled"] }, "key": { "type": "string" },
+            "created_at": { "type": "string", "format": "date-time" }, "expires_at": { "type": "string", "format": "date-time" },
+            "age_seconds": { "type": "integer" }, "evidence_checked_at": { "type": "string", "format": "date-time" }
+          } },
+          "request_duration_ms": { "type": "integer" }
+        }
+      },
+      "Verdict": { "enum": ["supported", "refuted", "mixed", "insufficient_evidence", "not_fact_checkable"] }
+    }
+  }
+}

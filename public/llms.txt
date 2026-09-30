@@ -1,0 +1,18 @@
+# Facet
+
+> Paid claim verification with retrieved source text, exact citations, and structured verdicts. $0.05 USDC per request on Solana mainnet. Payment buys a research attempt, including cache hits; a decisive verdict is not guaranteed.
+
+Production base URL: https://facet.hidden-pond-5e6a.workers.dev
+
+## Documentation
+- [Agent guide](/agents.md): Start here. Request fields, payment flow, result interpretation, and retry behavior.
+- [OpenAPI](/openapi.json): Machine-readable request and response contract.
+- [API guide](/docs.html): Human-readable integration reference.
+- [Community examples](/showcase.json): Curated September 28–30 X requests, measured endpoint findings, payment signatures, citations and limitations. Illustrations, not an accuracy benchmark.
+- [Community evaluation](/benchmark.json): All first attempts from 30 checks and 22 current X conversations, original bot replies, provisional reference labels, citations, timing, failures, and payment accounting.
+
+## Endpoints
+- [GET /v1/health](/v1/health): Free readiness, live/demo mode, and production payment configuration.
+- POST /v1/verify: Paid JSON verification. Use pay.sh or a compatible Solana MPP client to handle HTTP 402.
+
+Inspect verdict, atomic_claims, citations, evidence, limitations, research.warnings, and cache freshness before using a result. Insufficient evidence does not mean false. Demo evidence is fictional. No media forensics or historical verification.

@@ -1,0 +1,46 @@
+{
+  "service": "Facet",
+  "research_date": "2026-09-30",
+  "discovery_window": { "since": "2026-09-28", "until_exclusive": "2026-10-01", "timezone": "UTC" },
+  "methodology": "Six Twitter-only discovery searches and six thread lookups through TikHub. Dates manually checked because search filters also returned older quoted posts. Three purposively selected claims submitted to the public paid endpoint using pay curl, web and X evidence, and Azure gpt-5.6-luna. These are illustrative augmentations, not a controlled accuracy benchmark; retrieved context, times and budgets differ from public Grok replies. The human-treatment inference in the bee-venom input was an explicit test probe, not a user or Grok quote.",
+  "costs": { "discovery_and_context_retrieval_usd": "0.013200", "verification_retrieval_usd": "0.040700", "verification_azure_estimated_usd": "0.014237400", "customer_settlement_usdc": "0.15", "note": "Three $0.05 mainnet calls. Provider costs are merchant costs, not additional customer settlement; Azure uses configured estimated rates." },
+  "cases": [
+    {
+      "slug": "car-privacy",
+      "question_url": "https://x.com/SacredGeoInt/status/2105052397634486484",
+      "question_date": "2026-09-29T21:49:36Z",
+      "question_quote": "@grok is this true?",
+      "original_claim_url": "https://x.com/KaceeRAllen/status/2104954352150712768",
+      "grok_reply_url": "https://x.com/grok/status/2105052648604946653",
+      "grok_reply_quote": "Yes. In 2023 the 9th Circuit upheld dismissal of class actions against Honda, Toyota, Volkswagen, and GM. Plaintiffs alleged the cars' infotainment systems download and store texts and call logs when phones connect, in forms owners often cannot view or delete but law enforcement can extract with specialized tools. The court ruled this did not violate the Washington Privacy Act without showing injury to person, reputation, or business.",
+      "request": { "claim": "A 2023 Ninth Circuit dismissal of privacy lawsuits against Honda, Toyota, Volkswagen, and GM established that automakers can legally intercept all private texts and call logs as soon as a phone connects to a car.", "context": "Distinguish plaintiff allegations, the specific Washington Privacy Act civil injury requirement, and what the court actually decided from a blanket authorization. This is a factual assessment of a ruling, not legal advice.", "source_url": "https://x.com/SacredGeoInt/status/2105052397634486484", "sources": ["web", "x"] },
+      "result": { "id": "13090a73-fa5c-4095-8125-f9409b5e7e71", "verdict": "mixed", "duration_ms": 43930, "payment": "36SXLg39PcZ9MVkRxVw9empX8Y6zaKJc2V75wHcKnQuYz7UL54xbTAA7AKdwSdyyYxQbUsWD5k53X5cz6SEMKr6E", "findings": [ { "claim": "2023 appellate dismissal involving the four automakers", "verdict": "supported" }, { "claim": "Washington Privacy Act injury requirement", "verdict": "supported" }, { "claim": "Blanket authorization to intercept all private texts", "verdict": "refuted" }, { "claim": "Universal interception on any phone connection", "verdict": "insufficient_evidence" } ], "citations": [ { "url": "https://therecord.media/class-action-lawsuit-cars-text-messages-privacy", "quote": "The plaintiffs in the four live cases had appealed a prior judge’s dismissal. But the appellate judge ruled Tuesday that the interception and recording of mobile phone activity did not meet the Washington Privacy Act’s standard that a plaintiff must prove that “his or her business, his or her person, or his or her reputation” has been threatened." }, { "url": "https://news.northeastern.edu/2023/11/13/automaker-privacy-lawsuit-data-collection/", "quote": "The judge, upholding the dismissal of a lower court, ruled that the practice did not violate the Washington Privacy Act, noting the plaintiffs failed to prove the activity threatened “their business, person or reputation.”" } ] },
+      "augmentation": "Separates allegations, case outcome and the scope of a civil injury rule. Grok already supplied the injury requirement; the augmentation emphasizes why the broad opening is insufficient.",
+      "limitations": ["Court opinions were not retrieved; relied on source-document reporting and X context.", "One unrelated full page failed retrieval.", "Not an independently adjudicated legal correction or proof of universal vehicle behavior."]
+    },
+    {
+      "slug": "iphone-chips",
+      "question_url": "https://x.com/phriend75/status/2105340758496817438",
+      "question_date": "2026-09-30T16:55:26Z",
+      "question_quote": "I thought it was the iPhone 18. @grok",
+      "grok_reply_url": "https://x.com/grok/status/2105340893494382722",
+      "grok_reply_quote": "the C1X modem and N1 wireless chip in the iPhone 17e (and 17 series)",
+      "request": { "claim": "The iPhone 17e contains both the Apple C1X modem and the N1 wireless chip.", "context": "Check the specific 17e model against manufacturer specifications; distinguish lack of evidence from proof a chip is absent. Do not assess unrelated surveillance claims.", "source_url": "https://x.com/phriend75/status/2105340758496817438", "sources": ["web", "x"] },
+      "result": { "id": "48c1124f-7b98-45ab-a3d3-45f075677463", "verdict": "insufficient_evidence", "duration_ms": 12709, "payment": "37aD4GoXwnrjEq8nCkpKFk1bUJRck3ygsTno2pwEwqzjWQRi4hETtp4NFbKq7b8Epvviz1sS2tijMXWCaXV31cin", "findings": [ { "claim": "C1X cellular modem", "verdict": "supported" }, { "claim": "N1 wireless chip", "verdict": "insufficient_evidence" } ], "citations": [ { "url": "https://support.apple.com/en-us/126470", "quote": "Apple C1X cellular modem" }, { "url": "https://www.apple.com/iphone-17e/specs/", "quote": "- Apple C1X cellular modem" } ] },
+      "augmentation": "Grounds one asserted component in manufacturer specifications and identifies conflicting secondary evidence for the other.",
+      "limitations": ["Omission from specifications does not prove N1 absence.", "Manufacturer extracts were truncated, but the relevant wireless section was present.", "No verified teardown or manufacturer N1 statement; not proof Grok's assertion is false."]
+    },
+    {
+      "slug": "bee-venom",
+      "question_url": "https://x.com/NotFarLeftAtAll/status/2105319972666826971",
+      "question_date": "2026-09-30T15:32:51Z",
+      "question_quote": "Hey @grok is this true",
+      "grok_reply_url": "https://x.com/grok/status/2105320111724753196",
+      "grok_reply_quote": "Not a proven human treatment or cure—still preclinical, no clinical trials for therapy.",
+      "request": { "claim": "A 2020 study found that honeybee venom or melittin killed aggressive breast cancer cells within 60 minutes, establishing a proven treatment for breast cancer in humans.", "context": "Separate cell-culture and animal findings from human clinical efficacy. The human-treatment clause is a verification probe, not a quotation of the user or Grok, whose reply explicitly says this is preclinical.", "source_url": "https://x.com/NotFarLeftAtAll/status/2105319972666826971", "sources": ["web", "x"] },
+      "result": { "id": "77b1cba5-c3a3-4048-acf5-0f235e7d0d7c", "verdict": "refuted", "duration_ms": 26490, "payment": "5rTTWwVYv4WzAbUvsNzdeUVKKFfjFisjjKfU46DMR2ug464inWAa4hw3Ef1UrpCrSbFzqNdjqLV7RyKvfLeiqn8u", "findings": [ { "claim": "Melittin damaged cancer-cell membranes within 60 minutes in lab cultures", "verdict": "supported" }, { "claim": "Exact same complete-kill timing for whole honeybee venom", "verdict": "insufficient_evidence" }, { "claim": "Study established a proven treatment in humans", "verdict": "refuted" } ], "citations": [ { "url": "https://ecancer.org/en/news/18574-venom-from-honeybees-found-to-kill-aggressive-breast-cancer-cells", "quote": "\"We found that melittin can completely destroy cancer cell membranes within 60 minutes.\"" }, { "url": "https://www.facingourrisk.org/XRAY/honeybees-offer-hope-to-those-battling-breastcancer", "quote": "No studies were done in humans." }, { "url": "https://www.facingourrisk.org/XRAY/honeybees-offer-hope-to-those-battling-breastcancer", "quote": "Melittin is not ready for clinical use." } ] },
+      "augmentation": "Adds a cited, structured distinction between cell cultures and human efficacy. Agrees with Grok's preclinical caveat; not a correction.",
+      "limitations": ["Human-treatment clause was our added probe, not user or Grok wording.", "Primary PMC extract was inaccessible and only contained a cookie notice.", "Assessment relies on ecancer and FORCE excerpts; no clinical safety, dosing or efficacy established."]
+    }
+  ]
+}

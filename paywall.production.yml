@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=https://pay.sh/docs-assets/provider.schema.json
+name: claimcheck
+subdomain: claimcheck
+title: Facet
+description: Claim-specific evidence retrieval and assessment for agents.
+category: search
+version: v1
+routing:
+  type: proxy
+  url: '${UPSTREAM_BASE_URL}'
+  auth:
+    method: header
+    key: X-Origin-Key
+    value_from_env: ORIGIN_API_KEY
+operator:
+  currencies:
+    usd: ['USDC']
+  network: mainnet
+  fee_payer: true
+  rpc_url: '${PAY_RPC_URL}'
+  recipient: '${PAY_PAYMENT_RECIPIENT}'
+  challenge_binding_secret: '${PAY_MPP_CHALLENGE_SECRET}'
+  signer:
+    backend: env
+    value_from_env: PAY_OPERATOR_KEYPAIR
+endpoints:
+  - method: GET
+    path: 'v1/health'
+    description: Service readiness and configured capabilities.
+  - method: GET
+    path: 'openapi.json'
+    description: API specification.
+  - method: POST
+    path: 'v1/verify'
+    description: Retrieve source documents and assess one claim. Maximum 12 provider calls. Repeated requests may use a freshness-limited cache. Fixed price applies to cache hits too.
+    metering:
+      dimensions:
+        - direction: usage
+          unit: requests
+          scale: 1
+          tiers:
+            - price_usd: 0.05
